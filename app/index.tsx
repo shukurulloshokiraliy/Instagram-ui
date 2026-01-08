@@ -123,6 +123,18 @@ const HomeScreen = () => {
       timeAgo: "2h",
     },
   ];
+  const posts2: Post[] = [
+    {
+      id: "1",
+      username: "najottalim",
+      avatar:
+        "https://avatars.mds.yandex.net/i?id=7daf72afccd1d5f8c34745955630752586f3d72d-16971973-images-thumbs&n=13",
+      image: "https://avatars.mds.yandex.net/i?id=21b0e276209b466ea6cc3f370f3a3aae0e2fe6cf-12760159-images-thumbs&n=13",
+      caption: "Suxbat",
+      likes: 9999,
+      timeAgo: "3h",
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -192,8 +204,9 @@ const HomeScreen = () => {
             <View style={styles.captionOverlay}>
               <Text style={styles.captionText}>{post.caption}</Text>
             </View>
+            
 
-            {/* Post Actions with Icons */}
+        
             <View style={styles.postActions}>
               <View style={styles.postActionsLeft}>
                 {actionIcons.map((icon) => (
@@ -217,6 +230,61 @@ const HomeScreen = () => {
               {post.likes.toLocaleString()} likes
             </Text>
           </View>
+          
+          
+
+        ))}
+        
+        {posts2.map((post) => (
+          <View key={post.id} style={styles.post}>
+            <View style={styles.postHeader}>
+              <View style={styles.postHeaderLeft}>
+                <Image
+                  source={{ uri: post.avatar }}
+                  style={styles.postAvatar}
+                />
+                <Text style={styles.postUsername}>{post.username}</Text>
+                <Text style={styles.audioText}>• Original audio</Text>
+              </View>
+              <TouchableOpacity>
+                <Text style={styles.moreIcon}>⋮</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Image source={{ uri: post.image }} style={styles.postImage} />
+
+            <View style={styles.captionOverlay}>
+              <Text style={styles.captionText}>{post.caption}</Text>
+            </View>
+            
+
+        
+            <View style={styles.postActions}>
+              <View style={styles.postActionsLeft}>
+                {actionIcons.map((icon) => (
+                  <TouchableOpacity key={icon.id} style={styles.actionButton}>
+                    <Image
+                      source={{ uri: icon.icon }}
+                      style={styles.actionIconImage}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <TouchableOpacity>
+                <Image
+                  source={{ uri: "https://cdn-icons-png.flaticon.com/512/5662/5662990.png" }}
+                  style={styles.actionIconImage}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.likes}>
+              {post.likes.toLocaleString()} likes
+            </Text>
+          </View>
+          
+          
+
         ))}
       </ScrollView>
 
