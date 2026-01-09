@@ -1,4 +1,5 @@
-import React from "react";
+import { Link } from 'expo-router';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +10,7 @@ import {
   StatusBar,
   SafeAreaView,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -27,29 +29,45 @@ interface FooterIcon {
 }
 
 interface Post {
-  id: string;
-  username: string;
-  avatar: string;
-  image: string;
-  caption: string;
-  likes: number;
-  timeAgo: string;
+  id: number;
+  title: string;
+  body: string;
+  reactions: {
+    likes: number;
+    dislikes: number;
+  };
+  views: number;
+  userId: number;
 }
 
 const HomeScreen = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('https://dummyjson.com/posts')
+      .then(res => res.json())
+      .then(data => {
+        setPosts(data.posts);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching posts:', error);
+        setLoading(false);
+      });
+  }, []);
+
   const stories: Story[] = [
     {
       id: "0",
       username: "Your story",
-      avatar:
-        "https://i.pinimg.com/originals/8a/14/fe/8a14fefc276ab576e8ceac207cace638.jpg?nii=t",
+      avatar: "https://i.pinimg.com/originals/8a/14/fe/8a14fefc276ab576e8ceac207cace638.jpg?nii=t",
       hasStory: false,
     },
     {
       id: "1",
       username: "temurbek_adh...",
-      avatar:
-        "https://static2.vivoo.ru/datas/photos/800x800/4e/4d/cfb9c63ae7bfac9be86119bdf8dd.jpg?0",
+      avatar: "https://static2.vivoo.ru/datas/photos/800x800/4e/4d/cfb9c63ae7bfac9be86119bdf8dd.jpg?0",
       hasStory: true,
     },
     {
@@ -61,92 +79,41 @@ const HomeScreen = () => {
     {
       id: "3",
       username: "najottalim",
-      avatar:
-        "https://play-lh.googleusercontent.com/ZHi5sCM91D1VVoJpdUmIW1vAInohHU8VdHJeKXARX2uOCCoZ_kPUiMaxQFrbRJOrS4M",
+      avatar: "https://play-lh.googleusercontent.com/ZHi5sCM91D1VVoJpdUmIW1vAInohHU8VdHJeKXARX2uOCCoZ_kPUiMaxQFrbRJOrS4M",
       hasStory: true,
     },
   ];
 
- 
   const actionIcons: FooterIcon[] = [
-    {
-      id: "1",
-      name: "like",
-      icon: "https://cdn-icons-png.flaticon.com/512/1077/1077035.png", 
-    },
-    {
-      id: "2",
-      name: "comment",
-      icon: "https://cdn-icons-png.flaticon.com/512/1380/1380338.png", 
-    },
-    {
-      id: "3",
-      name: "share",
-      icon: "https://cdn-icons-png.flaticon.com/512/3024/3024593.png", 
-    },
+    { id: "1", name: "like", icon: "https://cdn-icons-png.flaticon.com/512/1077/1077035.png" },
+    { id: "2", name: "comment", icon: "https://cdn-icons-png.flaticon.com/512/1380/1380338.png" },
+    { id: "3", name: "share", icon: "https://cdn-icons-png.flaticon.com/512/3024/3024593.png" },
   ];
-
 
   const navIcons: FooterIcon[] = [
-    {
-      id: "1",
-      name: "home",
-      icon: "https://cdn-icons-png.flaticon.com/512/1946/1946488.png",
-    },
-    {
-      id: "2",
-      name: "search",
-      icon: "https://cdn-icons-png.flaticon.com/512/3031/3031293.png",
-    },
-    {
-      id: "3",
-      name: "add",
-      icon: "https://cdn-icons-png.flaticon.com/512/1237/1237946.png",
-    },
-    {
-      id: "4",
-      name: "reels",
-      icon: "https://cdn-icons-png.flaticon.com/512/2991/2991195.png",
-    },
-    
+    { id: "1", name: "home", icon: "https://cdn-icons-png.flaticon.com/512/1946/1946488.png" },
+    { id: "2", name: "search", icon: "https://cdn-icons-png.flaticon.com/512/3031/3031293.png" },
+    { id: "3", name: "add", icon: "https://cdn-icons-png.flaticon.com/512/1237/1237946.png" },
+    { id: "4", name: "reels", icon: "https://cdn-icons-png.flaticon.com/512/2991/2991195.png" },
   ];
 
-  const posts: Post[] = [
-    {
-      id: "1",
-      username: "millymallymoe",
-      avatar:
-        "https://avatars.mds.yandex.net/i?id=cb2c6dc7a4208a6ba83ea467cc1fface1b757f0f-5856211-images-thumbs&n=13",
-      image: "https://i.ytimg.com/vi/C8GoarZbu04/maxresdefault.jpg",
-      caption: "Shokir Yomon",
-      likes: 12897,
-      timeAgo: "2h",
-    },
-  ];
-  const posts2: Post[] = [
-    {
-      id: "1",
-      username: "najottalim",
-      avatar:
-        "https://avatars.mds.yandex.net/i?id=7daf72afccd1d5f8c34745955630752586f3d72d-16971973-images-thumbs&n=13",
-      image: "https://avatars.mds.yandex.net/i?id=21b0e276209b466ea6cc3f370f3a3aae0e2fe6cf-12760159-images-thumbs&n=13",
-      caption: "Suxbat",
-      likes: 9999,
-      timeAgo: "3h",
-    },
-  ];
+  const defaultPostImage = "https://i.ytimg.com/vi/_fVFV9wGOf4/maxresdefault.jpg";
+
+  const getUserInfo = () => ({
+    username: "Api-Users",
+    avatar: "https://i.pinimg.com/originals/8a/14/fe/8a14fefc276ab576e8ceac207cace638.jpg?nii=t",
+  });
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
 
+      
       <View style={styles.header}>
         <TouchableOpacity>
           <Text style={styles.addIcon}>+</Text>
         </TouchableOpacity>
-
         <Text style={styles.logo}>Instagram</Text>
-
         <TouchableOpacity>
           <View style={styles.heartIcon}>
             <Text style={styles.heartIconText}>♥</Text>
@@ -155,155 +122,115 @@ const HomeScreen = () => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
+      
         <View style={styles.storiesContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {stories.map((story) => (
-              <TouchableOpacity key={story.id} style={styles.storyItem}>
-                <View
-                  style={[
-                    styles.storyBorder,
-                    story.hasStory && styles.storyBorderActive,
-                  ]}
-                >
-                  <Image
-                    source={{ uri: story.avatar }}
-                    style={styles.storyAvatar}
-                  />
-                  {!story.hasStory && (
-                    <View style={styles.addStoryButton}>
-                      <Text style={styles.addStoryText}>+</Text>
+            {stories.map((story) => {
+              let storyRoute = "/";
+              if (story.id === "1") storyRoute = "/temurbek";
+              else if (story.id === "2") storyRoute = "/xusanboy";
+              else if (story.id === "3") storyRoute = "/najottalim";
+
+              return (
+                <Link key={story.id} href={storyRoute} asChild>
+                  <TouchableOpacity style={styles.storyItem}>
+                    <View style={[styles.storyBorder, story.hasStory && styles.storyBorderActive]}>
+                      <Image source={{ uri: story.avatar }} style={styles.storyAvatar} />
+                      {!story.hasStory && (
+                        <View style={styles.addStoryButton}>
+                          <Text style={styles.addStoryText}>+</Text>
+                        </View>
+                      )}
                     </View>
-                  )}
-                </View>
-                <Text style={styles.storyUsername} numberOfLines={1}>
-                  {story.username}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                    <Text style={styles.storyUsername} numberOfLines={1}>
+                      {story.username}
+                    </Text>
+                  </TouchableOpacity>
+                </Link>
+              );
+            })}
           </ScrollView>
         </View>
 
-        {posts.map((post) => (
-          <View key={post.id} style={styles.post}>
-            <View style={styles.postHeader}>
-              <View style={styles.postHeaderLeft}>
-                <Image
-                  source={{ uri: post.avatar }}
-                  style={styles.postAvatar}
-                />
-                <Text style={styles.postUsername}>{post.username}</Text>
-                <Text style={styles.audioText}>• Original audio</Text>
-              </View>
-              <TouchableOpacity>
-                <Text style={styles.moreIcon}>⋮</Text>
-              </TouchableOpacity>
-            </View>
+       
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#fff" />
+          </View>
+        ) : (
+          posts.map((post) => {
+            const userInfo = getUserInfo();
 
-            <Image source={{ uri: post.image }} style={styles.postImage} />
+            return (
+              <View key={post.id} style={styles.post}>
+                {/* Post Header */}
+                <View style={styles.postHeader}>
+                  <View style={styles.postHeaderLeft}>
+                    <Image source={{ uri: userInfo.avatar }} style={styles.postAvatar} />
+                    <Text style={styles.postUsername}>{userInfo.username}</Text>
+                    <Text style={styles.audioText}>• Original audio</Text>
+                  </View>
+                  <TouchableOpacity>
+                    <Text style={styles.moreIcon}>⋮</Text>
+                  </TouchableOpacity>
+                </View>
 
-            <View style={styles.captionOverlay}>
-              <Text style={styles.captionText}>{post.caption}</Text>
-            </View>
-            
+                {/* Post Image */}
+                <Image source={{ uri: defaultPostImage }} style={styles.postImage} />
 
-        
-            <View style={styles.postActions}>
-              <View style={styles.postActionsLeft}>
-                {actionIcons.map((icon) => (
-                  <TouchableOpacity key={icon.id} style={styles.actionButton}>
+                {/* Title Overlay on Image */}
+                <View style={styles.captionOverlay}>
+                  <Text style={styles.captionText} numberOfLines={2}>
+                    {post.title}
+                  </Text>
+                </View>
+
+                {/* Action Icons */}
+                <View style={styles.postActions}>
+                  <View style={styles.postActionsLeft}>
+                    {actionIcons.map((icon) => (
+                      <TouchableOpacity key={icon.id} style={styles.actionButton}>
+                        <Image source={{ uri: icon.icon }} style={styles.actionIconImage} />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                  <TouchableOpacity>
                     <Image
-                      source={{ uri: icon.icon }}
+                      source={{ uri: "https://cdn-icons-png.flaticon.com/512/5662/5662990.png" }}
                       style={styles.actionIconImage}
                     />
                   </TouchableOpacity>
-                ))}
+                </View>
+
+                {/* Likes */}
+                <Text style={styles.likes}>{post.reactions.likes.toLocaleString()} likes</Text>
+
+                {/* Views */}
+                <Text style={styles.views}>{post.views.toLocaleString()} views</Text>
+
+                {/* Caption */}
+                <View style={styles.captionContainer}>
+                  <Text style={styles.captionUsername}>{userInfo.username}</Text>
+                  <Text style={styles.captionBody} numberOfLines={2}>
+                    {post.body}
+                  </Text>
+                </View>
               </View>
-              <TouchableOpacity>
-                <Image
-                  source={{ uri: "https://cdn-icons-png.flaticon.com/512/5662/5662990.png" }}
-                  style={styles.actionIconImage}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.likes}>
-              {post.likes.toLocaleString()} likes
-            </Text>
-          </View>
-          
-          
-
-        ))}
-        
-        {posts2.map((post) => (
-          <View key={post.id} style={styles.post}>
-            <View style={styles.postHeader}>
-              <View style={styles.postHeaderLeft}>
-                <Image
-                  source={{ uri: post.avatar }}
-                  style={styles.postAvatar}
-                />
-                <Text style={styles.postUsername}>{post.username}</Text>
-                <Text style={styles.audioText}>• Original audio</Text>
-              </View>
-              <TouchableOpacity>
-                <Text style={styles.moreIcon}>⋮</Text>
-              </TouchableOpacity>
-            </View>
-
-            <Image source={{ uri: post.image }} style={styles.postImage} />
-
-            <View style={styles.captionOverlay}>
-              <Text style={styles.captionText}>{post.caption}</Text>
-            </View>
-            
-
-        
-            <View style={styles.postActions}>
-              <View style={styles.postActionsLeft}>
-                {actionIcons.map((icon) => (
-                  <TouchableOpacity key={icon.id} style={styles.actionButton}>
-                    <Image
-                      source={{ uri: icon.icon }}
-                      style={styles.actionIconImage}
-                    />
-                  </TouchableOpacity>
-                ))}
-              </View>
-              <TouchableOpacity>
-                <Image
-                  source={{ uri: "https://cdn-icons-png.flaticon.com/512/5662/5662990.png" }}
-                  style={styles.actionIconImage}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.likes}>
-              {post.likes.toLocaleString()} likes
-            </Text>
-          </View>
-          
-          
-
-        ))}
+            );
+          })
+        )}
       </ScrollView>
 
-
+      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         {navIcons.map((navIcon) => (
           <TouchableOpacity key={navIcon.id} style={styles.navButton}>
-            <Image
-              source={{ uri: navIcon.icon }}
-              style={styles.navIconImage}
-            />
+            <Image source={{ uri: navIcon.icon }} style={styles.navIconImage} />
           </TouchableOpacity>
         ))}
         <TouchableOpacity style={styles.navButton}>
           <View style={styles.profileNavIcon}>
-            <Image
-              source={{ uri: "https://via.placeholder.com/30" }}
-              style={styles.profileNavImage}
-            />
+            <Image source={{ uri: "https://via.placeholder.com/30" }} style={styles.profileNavImage} />
           </View>
         </TouchableOpacity>
       </View>
@@ -345,7 +272,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     color: "#fff",
   },
-
   storiesContainer: {
     paddingVertical: 16,
     borderBottomWidth: 0.5,
@@ -401,7 +327,12 @@ const styles = StyleSheet.create({
     marginTop: 6,
     textAlign: "center",
   },
-
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 50,
+  },
   post: {
     marginBottom: 16,
   },
@@ -445,15 +376,15 @@ const styles = StyleSheet.create({
   },
   captionOverlay: {
     position: "absolute",
-    bottom: 80,
+    bottom: 140,
     left: 16,
     right: 16,
   },
   captionText: {
     color: "#fff",
-    fontSize: 24,
-    fontFamily: "Dancing Script",
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    fontSize: 26,
+    fontWeight: "700",
+    textShadowColor: "rgba(0, 0, 0, 0.9)",
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 10,
   },
@@ -481,7 +412,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginTop: 4,
   },
-
+  views: {
+    color: "#999",
+    fontSize: 12,
+    paddingHorizontal: 12,
+    marginTop: 2,
+  },
+  captionContainer: {
+    paddingHorizontal: 12,
+    marginTop: 8,
+  },
+  captionUsername: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  captionBody: {
+    color: "#fff",
+    fontSize: 14,
+    marginTop: 4,
+  },
   bottomNav: {
     flexDirection: "row",
     justifyContent: "space-between",
