@@ -23,7 +23,7 @@ const TemurbekScreen = () => {
     if (!isPaused) {
       Animated.timing(progress, {
         toValue: 1,
-        duration: 5000, // 5 seconds story duration
+        duration: 5000,
         useNativeDriver: false,
       }).start(({ finished }) => {
         if (finished) {
@@ -59,7 +59,7 @@ const TemurbekScreen = () => {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
       
-      {/* Story Image */}
+     
       <TouchableOpacity
         activeOpacity={1}
         onPress={handlePress}
@@ -73,9 +73,9 @@ const TemurbekScreen = () => {
           resizeMode="cover"
         />
 
-        {/* Top Gradient Overlay */}
+        
         <View style={styles.topGradient}>
-          {/* Progress Bar */}
+       
           <SafeAreaView style={styles.progressBarContainer}>
             <View style={styles.progressBarWrapper}>
               <View style={styles.progressBarBackground}>
