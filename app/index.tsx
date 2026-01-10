@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -41,6 +41,7 @@ interface Post {
 }
 
 const HomeScreen = () => {
+  const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -104,6 +105,10 @@ const HomeScreen = () => {
     avatar: "https://i.pinimg.com/originals/8a/14/fe/8a14fefc276ab576e8ceac207cace638.jpg?nii=t",
   });
 
+  const navigateToPost = (postId: number) => {
+    router.push(`/post-detail?id=${postId}` as any);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
@@ -115,9 +120,10 @@ const HomeScreen = () => {
         </TouchableOpacity>
         <Text style={styles.logo}>Instagram</Text>
         <TouchableOpacity>
-          <View style={styles.heartIcon}>
-            <Text style={styles.heartIconText}>♥</Text>
-          </View>
+          <Image 
+            source={{ uri: "https://cdn-icons-png.flaticon.com/512/1077/1077035.png" }} 
+            style={styles.heartIconImage}
+          />
         </TouchableOpacity>
       </View>
 
@@ -126,27 +132,30 @@ const HomeScreen = () => {
         <View style={styles.storiesContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {stories.map((story) => {
-              let storyRoute = "/";
-              if (story.id === "1") storyRoute = "/temurbek";
-              else if (story.id === "2") storyRoute = "/xusanboy";
-              else if (story.id === "3") storyRoute = "/najottalim";
+              const handleStoryPress = () => {
+                if (story.id === "1") router.push("/temurbek" as any);
+                else if (story.id === "2") router.push("/xusanboy" as any);
+                else if (story.id === "3") router.push("/najottalim" as any);
+              };
 
               return (
-                <Link key={story.id} href={storyRoute} asChild>
-                  <TouchableOpacity style={styles.storyItem}>
-                    <View style={[styles.storyBorder, story.hasStory && styles.storyBorderActive]}>
-                      <Image source={{ uri: story.avatar }} style={styles.storyAvatar} />
-                      {!story.hasStory && (
-                        <View style={styles.addStoryButton}>
-                          <Text style={styles.addStoryText}>+</Text>
-                        </View>
-                      )}
-                    </View>
-                    <Text style={styles.storyUsername} numberOfLines={1}>
-                      {story.username}
-                    </Text>
-                  </TouchableOpacity>
-                </Link>
+                <TouchableOpacity 
+                  key={story.id} 
+                  style={styles.storyItem}
+                  onPress={handleStoryPress}
+                >
+                  <View style={[styles.storyBorder, story.hasStory && styles.storyBorderActive]}>
+                    <Image source={{ uri: story.avatar }} style={styles.storyAvatar} />
+                    {!story.hasStory && (
+                      <View style={styles.addStoryButton}>
+                        <Text style={styles.addStoryText}>+</Text>
+                      </View>
+                    )}
+                  </View>
+                  <Text style={styles.storyUsername} numberOfLines={1}>
+                    {story.username}
+                  </Text>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
@@ -175,15 +184,20 @@ const HomeScreen = () => {
                   </TouchableOpacity>
                 </View>
 
-                {/* Post Image */}
-                <Image source={{ uri: defaultPostImage }} style={styles.postImage} />
+                {/* Post Image - Clickable */}
+                <TouchableOpacity 
+                  activeOpacity={0.9}
+                  onPress={() => navigateToPost(post.id)}
+                >
+                  <Image source={{ uri: defaultPostImage }} style={styles.postImage} />
 
-                {/* Title Overlay on Image */}
-                <View style={styles.captionOverlay}>
-                  <Text style={styles.captionText} numberOfLines={2}>
-                    {post.title}
-                  </Text>
-                </View>
+                  {/* Title Overlay on Image */}
+                  <View style={styles.captionOverlay}>
+                    <Text style={styles.captionText} numberOfLines={2}>
+                      {post.title}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
 
                 {/* Action Icons */}
                 <View style={styles.postActions}>
@@ -208,13 +222,18 @@ const HomeScreen = () => {
                 {/* Views */}
                 <Text style={styles.views}>{post.views.toLocaleString()} views</Text>
 
-                {/* Caption */}
-                <View style={styles.captionContainer}>
+                {/* Caption - Clickable */}
+                <TouchableOpacity 
+                  style={styles.captionContainer}
+                  onPress={() => navigateToPost(post.id)}
+                  activeOpacity={0.8}
+                >
                   <Text style={styles.captionUsername}>{userInfo.username}</Text>
                   <Text style={styles.captionBody} numberOfLines={2}>
                     {post.body}
                   </Text>
-                </View>
+                  <Text style={styles.viewMore}>View more...</Text>
+                </TouchableOpacity>
               </View>
             );
           })
@@ -262,15 +281,10 @@ const styles = StyleSheet.create({
     fontFamily: "Billabong",
     fontWeight: "400",
   },
-  heartIcon: {
-    width: 28,
-    height: 28,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  heartIconText: {
-    fontSize: 26,
-    color: "#fff",
+  heartIconImage: {
+    width: 26,
+    height: 26,
+    tintColor: "#fff",
   },
   storiesContainer: {
     paddingVertical: 16,
@@ -376,7 +390,7 @@ const styles = StyleSheet.create({
   },
   captionOverlay: {
     position: "absolute",
-    bottom: 140,
+    bottom: 20,
     left: 16,
     right: 16,
   },
@@ -430,6 +444,11 @@ const styles = StyleSheet.create({
   captionBody: {
     color: "#fff",
     fontSize: 14,
+    marginTop: 4,
+  },
+  viewMore: {
+    color: "#999",
+    fontSize: 13,
     marginTop: 4,
   },
   bottomNav: {
