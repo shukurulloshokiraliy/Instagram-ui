@@ -396,11 +396,11 @@ const styles = StyleSheet.create({
   },
   captionText: {
     color: "#fff",
-    fontSize: 26,
-    fontWeight: "700",
+    fontSize: 22,
+    fontWeight: "600",
     textShadowColor: "rgba(0, 0, 0, 0.9)",
     textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 10,
+    textShadowRadius: 8,
   },
   postActions: {
     flexDirection: "row",
