@@ -88,7 +88,6 @@ const TemurbekScreen = () => {
               </View>
             </View>
 
-            {/* User Info */}
             <View style={styles.userInfoContainer}>
               <View style={styles.userInfo}>
                 <Image
@@ -110,16 +109,16 @@ const TemurbekScreen = () => {
           </SafeAreaView>
         </View>
 
-        {/* Bottom Gradient Overlay */}
+        
         <View style={styles.bottomGradient}>
-          {/* Story Text/Caption (Optional) */}
+      
           <View style={styles.captionContainer}>
             <Text style={styles.captionText}>
               Check out this amazing view! 🌄
             </Text>
           </View>
 
-          {/* Reply Input */}
+     
           <SafeAreaView style={styles.replyContainer}>
             <TouchableOpacity style={styles.replyInput}>
               <Text style={styles.replyPlaceholder}>Send message</Text>

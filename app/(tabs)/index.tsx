@@ -26,6 +26,7 @@ interface FooterIcon {
   id: string;
   icon: string;
   name: string;
+  route: string;
 }
 
 interface Post {
@@ -46,17 +47,21 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://dummyjson.com/posts')
-      .then(res => res.json())
-      .then(data => {
-        setPosts(data.posts);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching posts:', error);
-        setLoading(false);
-      });
+    fetchPosts();
   }, []);
+
+  // Fetch bilan API dan malumot olish (Axios o'rnatish shart emas!)
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch('https://dummyjson.com/posts');
+      const data = await response.json();
+      setPosts(data.posts);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      setLoading(false);
+    }
+  };
 
   const stories: Story[] = [
     {
@@ -80,22 +85,22 @@ const HomeScreen = () => {
     {
       id: "3",
       username: "najottalim",
-      avatar: "https://play-lh.googleusercontent.com/ZHi5sCM91D1VVoJpdUmIW1vAInohHU8VdHJeKXARX2uOCCoZ_kPUiMaxQFrbRJOrS4M",
+      avatar: "https://play-lh.googleusercontent.com/ZHi5sCM91D1VVoJpdUmIW1vAInohHU8VdHjeKXARX2uOCCoZ_kPUiMaxQFrbRJOrS4M",
       hasStory: true,
     },
   ];
 
   const actionIcons: FooterIcon[] = [
-    { id: "1", name: "like", icon: "https://cdn-icons-png.flaticon.com/512/1077/1077035.png" },
-    { id: "2", name: "comment", icon: "https://cdn-icons-png.flaticon.com/512/1380/1380338.png" },
-    { id: "3", name: "share", icon: "https://cdn-icons-png.flaticon.com/512/3024/3024593.png" },
+    { id: "1", name: "like", icon: "https://cdn-icons-png.flaticon.com/512/1077/1077035.png", route: "" },
+    { id: "2", name: "comment", icon: "https://cdn-icons-png.flaticon.com/512/1380/1380338.png", route: "" },
+    { id: "3", name: "share", icon: "https://cdn-icons-png.flaticon.com/512/3024/3024593.png", route: "" },
   ];
 
   const navIcons: FooterIcon[] = [
-    { id: "1", name: "home", icon: "https://cdn-icons-png.flaticon.com/512/1946/1946488.png" },
-    { id: "2", name: "search", icon: "https://cdn-icons-png.flaticon.com/512/3031/3031293.png" },
-    { id: "3", name: "add", icon: "https://cdn-icons-png.flaticon.com/512/1237/1237946.png" },
-    { id: "4", name: "reels", icon: "https://cdn-icons-png.flaticon.com/512/2991/2991195.png" },
+    { id: "1", name: "home", icon: "https://cdn-icons-png.flaticon.com/512/1946/1946488.png", route: "/(tabs)" },
+    { id: "2", name: "search", icon: "https://cdn-icons-png.flaticon.com/512/3031/3031293.png", route: "/(tabs)/search" },
+    { id: "3", name: "add", icon: "https://cdn-icons-png.flaticon.com/512/1237/1237946.png", route: "" },
+    { id: "4", name: "reels", icon: "https://cdn-icons-png.flaticon.com/512/2991/2991195.png", route: "/(tabs)/reels" },
   ];
 
   const defaultPostImage = "https://i.ytimg.com/vi/_fVFV9wGOf4/maxresdefault.jpg";
@@ -107,6 +112,12 @@ const HomeScreen = () => {
 
   const navigateToPost = (postId: number) => {
     router.push(`/post-detail?id=${postId}` as any);
+  };
+
+  const handleNavigation = (route: string) => {
+    if (route) {
+      router.push(route as any);
+    }
   };
 
   return (
@@ -172,7 +183,7 @@ const HomeScreen = () => {
 
             return (
               <View key={post.id} style={styles.post}>
-                {/* Post Header */}
+
                 <View style={styles.postHeader}>
                   <View style={styles.postHeaderLeft}>
                     <Image source={{ uri: userInfo.avatar }} style={styles.postAvatar} />
@@ -184,14 +195,14 @@ const HomeScreen = () => {
                   </TouchableOpacity>
                 </View>
 
-                {/* Post Image - Clickable */}
+              
                 <TouchableOpacity 
                   activeOpacity={0.9}
                   onPress={() => navigateToPost(post.id)}
                 >
                   <Image source={{ uri: defaultPostImage }} style={styles.postImage} />
 
-                  {/* Title Overlay on Image */}
+            
                   <View style={styles.captionOverlay}>
                     <Text style={styles.captionText} numberOfLines={2}>
                       {post.title}
@@ -199,7 +210,7 @@ const HomeScreen = () => {
                   </View>
                 </TouchableOpacity>
 
-                {/* Action Icons */}
+           
                 <View style={styles.postActions}>
                   <View style={styles.postActionsLeft}>
                     {actionIcons.map((icon) => (
@@ -216,13 +227,12 @@ const HomeScreen = () => {
                   </TouchableOpacity>
                 </View>
 
-                {/* Likes */}
+       
                 <Text style={styles.likes}>{post.reactions.likes.toLocaleString()} likes</Text>
 
-                {/* Views */}
+     
                 <Text style={styles.views}>{post.views.toLocaleString()} views</Text>
 
-                {/* Caption - Clickable */}
                 <TouchableOpacity 
                   style={styles.captionContainer}
                   onPress={() => navigateToPost(post.id)}
@@ -240,16 +250,26 @@ const HomeScreen = () => {
         )}
       </ScrollView>
 
-      {/* Bottom Navigation */}
+   
       <View style={styles.bottomNav}>
         {navIcons.map((navIcon) => (
-          <TouchableOpacity key={navIcon.id} style={styles.navButton}>
+          <TouchableOpacity 
+            key={navIcon.id} 
+            style={styles.navButton}
+            onPress={() => handleNavigation(navIcon.route)}
+          >
             <Image source={{ uri: navIcon.icon }} style={styles.navIconImage} />
           </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity 
+          style={styles.navButton}
+          onPress={() => router.push("/(tabs)/profile" as any)}
+        >
           <View style={styles.profileNavIcon}>
-            <Image source={{ uri: "https://via.placeholder.com/30" }} style={styles.profileNavImage} />
+            <Image 
+              source={{ uri: "https://i.pinimg.com/originals/8a/14/fe/8a14fefc276ab576e8ceac207cace638.jpg?nii=t" }} 
+              style={styles.profileNavImage} 
+            />
           </View>
         </TouchableOpacity>
       </View>
@@ -453,15 +473,18 @@ const styles = StyleSheet.create({
   },
   bottomNav: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     backgroundColor: "#000",
     borderTopWidth: 0.5,
     borderTopColor: "#333",
   },
   navButton: {
     padding: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
   navIconImage: {
     width: 26,
@@ -469,10 +492,12 @@ const styles = StyleSheet.create({
     tintColor: "#fff",
   },
   profileNavIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     overflow: "hidden",
+    borderWidth: 2,
+    borderColor: "#fff",
   },
   profileNavImage: {
     width: "100%",

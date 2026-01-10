@@ -50,7 +50,7 @@ const PostDetailScreen = () => {
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    // Fetch post details
+
     fetch(`https://dummyjson.com/posts/${id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -60,7 +60,7 @@ const PostDetailScreen = () => {
         console.error('Error fetching post:', error);
       });
 
-    // Fetch comments for the post
+   
     fetch(`https://dummyjson.com/posts/${id}/comments`)
       .then((res) => res.json())
       .then((data) => {
@@ -73,7 +73,7 @@ const PostDetailScreen = () => {
       });
   }, [id]);
 
-  const defaultPostImage = 'https://i.ytimg.com/vi/_fVFV9wGOf4/maxresdefault.jpg';
+  const defaultPostImage = 'https://avatars.mds.yandex.net/i?id=0cdc7e3185ebae408db45020d46695dc46478f6f-5235569-images-thumbs&n=13';
 
   const getUserInfo = () => ({
     username: 'Api-Users',
@@ -128,7 +128,6 @@ const PostDetailScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
 
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Text style={styles.backIcon}>←</Text>
@@ -138,7 +137,7 @@ const PostDetailScreen = () => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Post Header */}
+     
         <View style={styles.postHeader}>
           <View style={styles.postHeaderLeft}>
             <Image source={{ uri: userInfo.avatar }} style={styles.postAvatar} />
@@ -152,10 +151,10 @@ const PostDetailScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Post Image */}
+     
         <Image source={{ uri: defaultPostImage }} style={styles.postImage} />
 
-        {/* Action Icons */}
+        
         <View style={styles.postActions}>
           <View style={styles.postActionsLeft}>
             <TouchableOpacity
@@ -187,7 +186,7 @@ const PostDetailScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Likes and Views */}
+       
         <View style={styles.statsContainer}>
           <Text style={styles.likes}>
             {(post.reactions.likes + (isLiked ? 1 : 0)).toLocaleString()} likes
@@ -195,18 +194,17 @@ const PostDetailScreen = () => {
           <Text style={styles.views}>{post.views.toLocaleString()} views</Text>
         </View>
 
-        {/* Post Title */}
+    
         <View style={styles.titleContainer}>
           <Text style={styles.postTitle}>{post.title}</Text>
         </View>
 
-        {/* Post Body */}
+
         <View style={styles.bodyContainer}>
           <Text style={styles.captionUsername}>{userInfo.username}</Text>
           <Text style={styles.postBody}>{post.body}</Text>
         </View>
 
-        {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <View style={styles.tagsContainer}>
             {post.tags.map((tag, index) => (
@@ -217,7 +215,7 @@ const PostDetailScreen = () => {
           </View>
         )}
 
-        {/* Comments Section */}
+    
         <View style={styles.commentsSection}>
           <Text style={styles.commentsTitle}>
             Comments ({comments.length})
@@ -269,7 +267,7 @@ const PostDetailScreen = () => {
           )}
         </View>
 
-        {/* Add Comment Input */}
+   
         <View style={styles.addCommentContainer}>
           <Image source={{ uri: userInfo.avatar }} style={styles.commentInputAvatar} />
           <TouchableOpacity style={styles.commentInput}>

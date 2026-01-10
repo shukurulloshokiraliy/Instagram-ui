@@ -13,7 +13,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)/index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)/profile" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)/reels" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)/search" options={{ headerShown: false }} />
+        <Stack.Screen name="post-detail" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
